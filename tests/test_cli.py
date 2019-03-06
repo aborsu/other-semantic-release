@@ -245,7 +245,7 @@ def test_publish_should_call_functions(mocker, runner):
     assert mock_push.called
     assert mock_pypi.called
     mock_version.assert_called_once_with(noop=False, post=False, force_level=None, retry=False)
-    mock_log.assert_called_once_with(u'relekang', 'python-semantic-release', '2.0.0', 'CHANGES')
+    mock_log.assert_called_once_with(u'aborsu', 'python-semantic-release', '2.0.0', 'CHANGES')
     mock_checkout.assert_called_once_with('master')
 
 
