@@ -27,7 +27,9 @@ COMMON_OPTIONS = [
     click.option('--post', is_flag=True, help='Post changelog.'),
     click.option('--retry', is_flag=True, help='Retry the same release, do not bump.'),
     click.option('--noop', is_flag=True,
-                 help='No-operations mode, finds the new version number without changing it.')
+                 help='No-operations mode, finds the new version number without changing it.'),
+    click.option('--quiet', is_flag=True,
+                 help='Same as noop but only outputs calculated version number (for use in scripts).'),
 ]
 
 
@@ -48,7 +50,7 @@ def version(**kwargs):
     retry = kwargs.get("retry")
     if retry:
         click.echo('Retrying publication of the same version...')
-    else:
+    elif not kwargs['quiet']:
         click.echo('Creating new version..')
 
     try:
@@ -57,7 +59,8 @@ def version(**kwargs):
         click.echo(click.style(str(e), 'red'), err=True)
         return False
 
-    click.echo('Current version: {0}'.format(current_version))
+    if not kwargs['quiet']:
+        click.echo('Current version: {0}'.format(current_version))
     level_bump = evaluate_version_bump(current_version, kwargs['force_level'])
     new_version = get_new_version(current_version, level_bump)
 
@@ -65,7 +68,10 @@ def version(**kwargs):
         click.echo(click.style('No release will be made.', fg='yellow'))
         return False
 
-    if kwargs['noop'] is True:
+    if kwargs['quiet'] is True:
+        sys.stdout.write(new_version)
+        return False
+    elif kwargs['noop'] is True:
         click.echo('{0} Should have bumped from {1} to {2}.'.format(
             click.style('No operation mode.', fg='yellow'),
             current_version,
