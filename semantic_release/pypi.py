@@ -1,8 +1,21 @@
 """PyPI
 """
-from invoke import run
+import subprocess
+
+import ndebug
 
 from semantic_release import ImproperConfigurationError
+
+debug = ndebug.create(__name__)
+
+
+def run(command):
+    debug(" ".join(command))
+    out = subprocess.run(command, capture_output=True)
+    if out.returncode != 0:
+        raise Exception("Command execution failure!\n\n" +
+                        "Exit code: {}\n\n".format(out.returncode) +
+                        "Stderr:\n\n{}".format(out.stderr.decode('utf-8')))
 
 
 def upload_to_pypi(
@@ -21,14 +34,11 @@ def upload_to_pypi(
     """
     if username is None or password is None or username == "" or password == "":
         raise ImproperConfigurationError('Missing credentials for uploading')
-    run('rm -rf build dist')
-    run('python setup.py {}'.format(dists))
-    run(
-        'twine upload -u {} -p {} {} {}'.format(
-            username,
-            password,
-            '--skip-existing' if skip_existing else '',
-            'dist/*'
-        )
-    )
-    run('rm -rf build dist')
+    run(['rm', '-rf', 'build', 'dist'])
+    run(['python', 'setup.py', *dists.split(' ')])
+    run([
+        'twine', 'upload', '-u', username, '-p', password,
+        *(['--skip-existing'] if skip_existing else []),
+        'dist/*'
+    ])
+    run(['rm', '-rf', 'build', 'dist'])
