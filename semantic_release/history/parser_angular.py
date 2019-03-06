@@ -43,15 +43,12 @@ def parse_commit_message(message: str) -> Tuple[int, str, str, Tuple[str, str, s
             'Unable to parse the given commit message: {}'.format(message)
         )
 
-    level_bump = 0
     if parsed.group('text') and 'BREAKING CHANGE' in parsed.group('text'):
         level_bump = 3
-
-    if parsed.group('type') == 'feat':
-        level_bump = max([level_bump, 2])
-
-    if parsed.group('type') == 'fix':
-        level_bump = max([level_bump, 1])
+    elif parsed.group('type') == 'feat':
+        level_bump = 2
+    else:
+        level_bump = 1
 
     body, footer = parse_text_block(parsed.group('text'))
     if debug.enabled:

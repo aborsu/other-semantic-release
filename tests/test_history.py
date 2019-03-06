@@ -65,8 +65,8 @@ class EvaluateVersionBumpTest(TestCase):
 
     @mock.patch('semantic_release.history.config.getboolean', lambda *x: False)
     @mock.patch('semantic_release.history.logs.get_commit_log', lambda *a, **kw: [NO_TAG])
-    def test_should_return_none_without_tagged_commits(self):
-        self.assertIsNone(evaluate_version_bump('1.1.0'))
+    def test_should_patch_without_tagged_commits_2(self):
+        self.assertEqual(evaluate_version_bump('1.1.0'), 'patch')
 
     @mock.patch('semantic_release.history.logs.get_commit_log', lambda *a, **kw: [])
     def test_should_return_none_without_commits(self):
