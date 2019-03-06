@@ -1,6 +1,6 @@
 """Semantic Release
 """
-__version__ = '4.2.0'
+__version__ = '5.0.0'
 
 from .errors import (ImproperConfigurationError, SemanticReleaseBaseError,
                      UnknownCommitMessageStyleError)
