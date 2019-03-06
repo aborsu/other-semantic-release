@@ -29,7 +29,7 @@ COMMON_OPTIONS = [
     click.option('--noop', is_flag=True,
                  help='No-operations mode, finds the new version number without changing it.'),
     click.option('--quiet', is_flag=True,
-                 help='Same as noop but only outputs calculated version number (for use in scripts).'),
+                 help='Same as noop but only outputs calculated version number.'),
 ]
 
 
